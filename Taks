@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lake Roots — July 2026 Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#2A4A1E; --forest-deep:#1C3314; --forest-soft:#3C6129;
+    --gold:#C4921A; --gold-soft:#E0B448; --gold-wash:#FBF1D8;
+    --wheat:#F2E8CC; --paper:#FAF6EC; --cream:#FFFDF7; --white:#fff;
+    --ink:#26251F; --ink-soft:#73705F; --ink-faint:#9b9784;
+    --coffee:#6B4423; --coffee-soft:#8A5A30; --coffee-wash:#F3E7DC;
+    --line:rgba(42,74,30,0.13); --line-strong:rgba(42,74,30,0.22);
+    --shadow:0 1px 2px rgba(28,51,20,.05), 0 6px 18px rgba(28,51,20,.06);
+    --shadow-lg:0 12px 40px rgba(28,51,20,.16);
+    --ok:#3C6129; --warn:#C4921A; --danger:#9c3a2a;
+    --disp:'Fraunces',Georgia,serif;
+    --label:'Oswald',sans-serif;
+    --body:'Inter',-apple-system,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.5;font-size:15px}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;
+    background:
+      radial-gradient(1200px 500px at 12% -8%, rgba(196,146,26,.10), transparent 60%),
+      radial-gradient(1000px 600px at 100% 0%, rgba(42,74,30,.10), transparent 55%);}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
+  .label{font-family:var(--label);text-transform:uppercase;letter-spacing:.09em;font-weight:600}
+  .disp{font-family:var(--disp)}
+  a{color:var(--forest);text-underline-offset:2px}
+
+  /* ---------- Header ---------- */
+  header{background:var(--forest);color:#f4efe0;position:sticky;top:0;z-index:40;
+    box-shadow:0 2px 0 var(--gold), 0 8px 24px rgba(28,51,20,.18)}
+  .head-inner{max-width:1240px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:13px;min-width:0}
+  .mark{width:42px;height:42px;flex:none;border-radius:50%;background:var(--gold);
+    display:grid;place-items:center;box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}
+  .mark svg{width:24px;height:24px}
+  .brand h1{font-family:var(--disp);font-weight:600;font-size:20px;line-height:1.05;letter-spacing:.2px}
+  .brand .sub{font-family:var(--label);text-transform:uppercase;letter-spacing:.16em;font-size:10.5px;
+    color:var(--gold-soft);font-weight:500;margin-top:2px}
+  .head-tools{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .save-pill{font-family:var(--label);text-transform:uppercase;letter-spacing:.08em;font-size:10.5px;
+    font-weight:600;color:#dbe6cf;background:rgba(255,255,255,.08);padding:5px 11px;border-radius:20px;
+    display:inline-flex;align-items:center;gap:6px}
+  .save-dot{width:7px;height:7px;border-radius:50%;background:var(--gold-soft)}
+  .save-pill.saved .save-dot{background:#9fd17a}
+  .ghost{color:#e9e2cf;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+    padding:7px 12px;border-radius:9px;font-size:12.5px;font-weight:600;transition:.15s}
+  .ghost:hover{background:rgba(255,255,255,.16)}
+
+  /* ---------- Nav ---------- */
+  nav{background:var(--cream);border-bottom:1px solid var(--line);position:sticky;top:71px;z-index:30}
+  .nav-inner{max-width:1240px;margin:0 auto;padding:0 16px;display:flex;gap:2px;overflow-x:auto}
+  .tab{font-family:var(--label);text-transform:uppercase;letter-spacing:.07em;font-weight:600;font-size:13px;
+    color:var(--ink-soft);padding:14px 16px;border-bottom:3px solid transparent;white-space:nowrap;
+    display:inline-flex;align-items:center;gap:8px;transition:.15s}
+  .tab svg{width:17px;height:17px;opacity:.7}
+  .tab:hover{color:var(--forest)}
+  .tab.active{color:var(--forest);border-bottom-color:var(--gold)}
+  .tab.active svg{opacity:1}
+
+  main{max-width:1240px;margin:0 auto;padding:26px 22px 80px}
+  .view{display:none;animation:fade .25s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .view-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .view-head h2{font-family:var(--disp);font-weight:600;font-size:30px;letter-spacing:-.3px;line-height:1}
+  .view-head .lede{color:var(--ink-soft);font-size:13.5px;margin-top:7px;max-width:62ch}
+  .eyebrow{font-family:var(--label);text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:600;
+    color:var(--gold);margin-bottom:8px}
+
+  /* ---------- Buttons ---------- */
+  .btn{font-family:var(--label);text-transform:uppercase;letter-spacing:.05em;font-weight:600;font-size:12.5px;
+    padding:9px 15px;border-radius:9px;display:inline-flex;align-items:center;gap:7px;transition:.15s;
+    border:1px solid transparent}
+  .btn svg{width:15px;height:15px}
+  .btn-primary{background:var(--forest);color:#f4efe0}
+  .btn-primary:hover{background:var(--forest-deep)}
+  .btn-gold{background:var(--gold);color:#3a2c08}
+  .btn-gold:hover{background:#b1831414;background-color:var(--gold-soft)}
+  .btn-line{background:var(--white);border-color:var(--line-strong);color:var(--forest)}
+  .btn-line:hover{background:var(--gold-wash)}
+
+  /* ---------- Cards ---------- */
+  .card{background:var(--white);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+  .grid{display:grid;gap:18px}
+
+  /* ---------- Dashboard ---------- */
+  .dash-top{grid-template-columns:1.15fr .85fr}
+  @media(max-width:860px){.dash-top{grid-template-columns:1fr}}
+  .panel-pad{padding:22px}
+  .panel-title{font-family:var(--label);text-transform:uppercase;letter-spacing:.1em;font-size:12.5px;
+    font-weight:600;color:var(--ink-soft);display:flex;align-items:center;gap:8px;margin-bottom:16px}
+  .panel-title .pt-dot{width:9px;height:9px;border-radius:2px;background:var(--gold)}
+
+  .progress-wrap{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+  .ring{position:relative;width:128px;height:128px;flex:none}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .ring-center{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+  .ring .ring-num{font-family:var(--disp);font-weight:600;font-size:34px;line-height:1;color:var(--forest)}
+  .ring .ring-lab{font-family:var(--label);text-transform:uppercase;letter-spacing:.08em;font-size:10px;
+    color:var(--ink-soft);font-weight:600;margin-top:3px}
+  .prog-stats{display:flex;flex-direction:column;gap:11px;flex:1;min-width:180px}
+  .prog-row{display:flex;align-items:center;justify-content:space-between;font-size:13.5px}
+  .prog-row b{font-family:var(--disp);font-weight:600;font-size:17px}
+
+  .balance{margin-top:6px}
+  .bal-bar{height:30px;border-radius:9px;overflow:hidden;display:flex;border:1px solid var(--line);background:var(--wheat)}
+  .bal-seg{display:flex;align-items:center;justify-content:center;font-family:var(--label);text-transform:uppercase;
+    letter-spacing:.06em;font-size:11px;font-weight:600;color:#fff;transition:flex-basis .4s ease;white-space:nowrap;overflow:hidden}
+  .bal-mkt{background:linear-gradient(180deg,var(--gold-soft),var(--gold));color:#3a2c08}
+  .bal-cat{background:linear-gradient(180deg,var(--coffee-soft),var(--coffee))}
+  .bal-legend{display:flex;gap:18px;margin-top:12px;font-size:12.5px;color:var(--ink-soft);flex-wrap:wrap}
+  .bal-legend span{display:inline-flex;align-items:center;gap:7px}
+  .swatch{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+  .stat-grid{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:760px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+  .stat{padding:16px 16px 15px;border-radius:14px;background:var(--cream);border:1px solid var(--line);position:relative;overflow:hidden}
+  .stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold)}
+  .stat.cat::before{background:var(--coffee)}
+  .stat .s-num{font-family:var(--disp);font-weight:600;font-size:30px;line-height:1;color:var(--forest)}
+  .stat .s-lab{font-family:var(--label);text-transform:uppercase;letter-spacing:.06em;font-size:11px;
+    color:var(--ink-soft);font-weight:600;margin-top:7px}
+
+  .focus-list,.upcoming-list{display:flex;flex-direction:column;gap:2px}
+  .focus-item{display:flex;gap:12px;align-items:flex-start;padding:12px 6px;border-bottom:1px solid var(--line)}
+  .focus-item:last-child{border-bottom:none}
+  .fi-date{font-family:var(--label);text-transform:uppercase;font-size:11px;font-weight:600;color:var(--gold);
+    width:54px;flex:none;text-align:center;line-height:1.25;padding-top:2px}
+  .fi-date .d{font-family:var(--disp);font-size:19px;color:var(--forest);display:block}
+  .fi-body{flex:1;min-width:0}
+  .fi-title{font-weight:600;font-size:14px}
+  .fi-meta{font-size:12px;color:var(--ink-soft);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+  .tag{font-family:var(--label);text-transform:uppercase;letter-spacing:.05em;font-size:9.5px;font-weight:600;
+    padding:3px 8px;border-radius:20px;white-space:nowrap}
+  .tag-mkt{background:var(--gold-wash);color:#7a5a06}
+  .tag-cat{background:var(--coffee-wash);color:var(--coffee)}
+  .tag-event{background:#e7efe1;color:var(--forest)}
+  .tag-shoot{background:#e9e2f3;color:#5a4178}
+  .tag-social{background:#e2eef2;color:#2d6072}
+
+  /* rhythm */
+  .rhythm-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+  @media(max-width:760px){.rhythm-grid{grid-template-columns:1fr 1fr}}
+  .rhythm-day{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:96px}
+  .rhythm-day h4{font-family:var(--label);text-transform:uppercase;letter-spacing:.06em;font-size:11.5px;
+    color:var(--forest);font-weight:600;margin-bottom:6px}
+  .rhythm-day .rh-text{font-size:12px;color:var(--ink-soft);line-height:1.45;border:none;background:transparent;
+    width:100%;resize:none;min-height:62px;outline:none}
+  .rhythm-day .rh-text:focus{color:var(--ink)}
+
+  /* ---------- Tasks ---------- */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+  .seg{display:inline-flex;background:var(--white);border:1px solid var(--line-strong);border-radius:10px;overflow:hidden}
+  .seg button{font-family:var(--label);text-transform:uppercase;letter-spacing:.05em;font-size:12px;font-weight:600;
+    padding:8px 13px;color:var(--ink-soft);transition:.12s}
+  .seg button.on{background:var(--forest);color:#f4efe0}
+  .seg button.on.mkt{background:var(--gold);color:#3a2c08}
+  .seg button.on.cat{background:var(--coffee);color:#fff}
+  .search{flex:1;min-width:160px;max-width:280px;position:relative}
+  .search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--line-strong);border-radius:10px;background:var(--white)}
+  .search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ink-faint)}
+
+  .tasks-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:860px){.tasks-cols{grid-template-columns:1fr}}
+  .task-col-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .task-col-head .tch-title{font-family:var(--disp);font-weight:600;font-size:18px;display:flex;align-items:center;gap:9px}
+  .domain-dot{width:12px;height:12px;border-radius:3px}
+  .dd-mkt{background:var(--gold)} .dd-cat{background:var(--coffee)}
+  .task-col-head .count{font-family:var(--label);font-size:12px;color:var(--ink-soft);font-weight:600}
+
+  .task{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;background:var(--white);border:1px solid var(--line);
+    border-radius:13px;margin-bottom:9px;box-shadow:var(--shadow);transition:.15s}
+  .task:hover{border-color:var(--line-strong)}
+  .task.done{opacity:.62;background:var(--cream)}
+  .task.done .t-title{text-decoration:line-through;text-decoration-color:var(--ink-faint)}
+  .check{width:22px;height:22px;flex:none;border-radius:7px;border:2px solid var(--line-strong);background:var(--white);
+    margin-top:1px;display:grid;place-items:center;transition:.15s}
+  .check:hover{border-color:var(--forest)}
+  .check svg{width:14px;height:14px;color:#fff;opacity:0;transform:scale(.5);transition:.15s}
+  .task.done .check{background:var(--ok);border-color:var(--ok)}
+  .task.done .check svg{opacity:1;transform:scale(1)}
+  .t-main{flex:1;min-width:0}
+  .t-title{font-weight:600;font-size:14.5px;line-height:1.3}
+  .t-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:7px;font-size:12px;color:var(--ink-soft)}
+  .t-cat{font-family:var(--label);text-transform:uppercase;letter-spacing:.04em;font-size:10px;font-weight:600}
+  .t-date{display:inline-flex;align-items:center;gap:4px}
+  .t-date svg{width:12px;height:12px}
+  .t-notes{font-size:12.5px;color:var(--ink-soft);margin-top:7px;line-height:1.45}
+  .prio{width:8px;height:8px;border-radius:50%;flex:none}
+  .prio-high{background:var(--danger)} .prio-med{background:var(--gold)} .prio-low{background:var(--ink-faint)}
+  .t-actions{display:flex;gap:4px;flex:none;opacity:0;transition:.15s}
+  .task:hover .t-actions{opacity:1}
+  .icon-btn{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--ink-soft);transition:.12s}
+  .icon-btn:hover{background:var(--wheat);color:var(--forest)}
+  .icon-btn svg{width:15px;height:15px}
+  .add-inline{width:100%;text-align:left;padding:12px 14px;border:1.5px dashed var(--line-strong);border-radius:13px;
+    color:var(--ink-soft);font-family:var(--label);text-transform:uppercase;letter-spacing:.05em;font-weight:600;font-size:12.5px;
+    display:flex;align-items:center;gap:8px;transition:.15s}
+  .add-inline:hover{border-color:var(--gold);color:var(--forest);background:var(--gold-wash)}
+  .add-inline svg{width:16px;height:16px}
+
+  /* ---------- Calendar ---------- */
+  .cal-wrap{overflow-x:auto}
+  .cal{width:100%;border-collapse:separate;border-spacing:0;min-width:720px;table-layout:fixed}
+  .cal th{font-family:var(--label);text-transform:uppercase;letter-spacing:.08em;font-size:11.5px;font-weight:600;
+    color:var(--ink-soft);padding:0 0 12px;text-align:left}
+  .cal td{vertical-align:top;border:1px solid var(--line);height:118px;width:14.28%;padding:0;background:var(--white);position:relative}
+  .cal td:first-child,.cal td.weekend{background:var(--cream)}
+  .cal td.empty{background:transparent;border-color:transparent}
+  .cell{padding:8px;height:100%;display:flex;flex-direction:column;cursor:pointer;transition:.12s}
+  .cell:hover{background:var(--gold-wash)}
+  .cell.has-today{box-shadow:inset 0 0 0 2px var(--gold)}
+  .daynum{font-family:var(--disp);font-weight:600;font-size:16px;color:var(--ink);margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
+  .daynum .today-pill{font-family:var(--label);font-size:8.5px;letter-spacing:.05em;background:var(--gold);color:#3a2c08;
+    padding:2px 6px;border-radius:10px;text-transform:uppercase}
+  .chips{display:flex;flex-direction:column;gap:3px;overflow:hidden}
+  .chip{font-size:10.5px;line-height:1.25;padding:3px 6px;border-radius:6px;white-space:nowrap;overflow:hidden;
+    text-overflow:ellipsis;font-weight:600;border-left:3px solid}
+  .chip-mkt{background:var(--gold-wash);border-color:var(--gold);color:#7a5a06}
+  .chip-cat{background:var(--coffee-wash);border-color:var(--coffee);color:var(--coffee)}
+  .chip-event{background:#e7efe1;border-color:var(--forest);color:var(--forest)}
+  .chip-shoot{background:#e9e2f3;border-color:#5a4178;color:#5a4178}
+  .chip-social{background:#e2eef2;border-color:#2d6072;color:#2d6072}
+  .chip.done{opacity:.5;text-decoration:line-through}
+  .more{font-size:10px;color:var(--ink-soft);font-weight:600;padding:1px 6px}
+  .cal-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;font-size:12px;color:var(--ink-soft)}
+  .cal-legend span{display:inline-flex;align-items:center;gap:7px}
+
+  /* ---------- Social ---------- */
+  .pillars{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}
+  @media(max-width:900px){.pillars{grid-template-columns:1fr 1fr}}
+  .pillar{padding:13px;border-radius:12px;background:var(--white);border:1px solid var(--line);box-shadow:var(--shadow)}
+  .pillar .p-n{font-family:var(--disp);font-weight:600;font-size:15px;color:var(--forest);line-height:1.15}
+  .pillar .p-d{font-size:11.5px;color:var(--ink-soft);margin-top:6px;line-height:1.4}
+  .pillar::before{content:"";display:block;width:26px;height:3px;border-radius:3px;background:var(--gold);margin-bottom:9px}
+
+  .social-table{width:100%;border-collapse:collapse}
+  .social-table thead th{font-family:var(--label);text-transform:uppercase;letter-spacing:.06em;font-size:11px;font-weight:600;
+    color:var(--ink-soft);text-align:left;padding:10px 12px;border-bottom:2px solid var(--line-strong)}
+  .social-table td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13.5px}
+  .social-table tr:hover td{background:var(--cream)}
+  .s-date-cell{white-space:nowrap;font-weight:600;color:var(--forest)}
+  .s-date-cell .dow{display:block;font-family:var(--label);font-size:10px;color:var(--ink-faint);text-transform:uppercase;font-weight:600}
+  .status-sel{border:1px solid var(--line-strong);border-radius:8px;padding:5px 8px;background:var(--white);font-weight:600;font-size:12px}
+  .pill-status{font-family:var(--label);text-transform:uppercase;letter-spacing:.04em;font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px}
+  .st-planned{background:#eef0ea;color:var(--ink-soft)}
+  .st-shoot{background:#e9e2f3;color:#5a4178}
+  .st-editing{background:var(--gold-wash);color:#7a5a06}
+  .st-ready{background:#e7efe1;color:var(--forest)}
+  .st-posted{background:var(--forest);color:#eaf0e4}
+  .social-cards{display:none}
+  @media(max-width:760px){
+    .social-table thead{display:none}
+    .social-table,.social-table tbody,.social-table tr,.social-table td{display:block;width:100%}
+    .social-table tr{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;background:var(--white);padding:6px}
+    .social-table td{border:none;padding:6px 12px}
+    .social-table td::before{content:attr(data-l);font-family:var(--label);text-transform:uppercase;font-size:10px;
+      color:var(--ink-faint);font-weight:600;display:block;margin-bottom:2px}
+  }
+
+  /* ---------- Notes ---------- */
+  .notes-grid{grid-template-columns:1.4fr .9fr}
+  @media(max-width:860px){.notes-grid{grid-template-columns:1fr}}
+  .notepad{width:100%;min-height:420px;border:1px solid var(--line);border-radius:14px;padding:20px;background:var(--cream);
+    font-size:14.5px;line-height:1.7;resize:vertical;outline:none;color:var(--ink);
+    background-image:repeating-linear-gradient(transparent,transparent 31px,var(--line) 31px,var(--line) 32px);
+    background-attachment:local;line-height:32px}
+  .notepad:focus{box-shadow:0 0 0 3px var(--gold-wash)}
+  .ref-card{background:var(--forest);color:#eef0e6;border-radius:16px;padding:22px;margin-bottom:16px}
+  .ref-card h3{font-family:var(--disp);font-weight:600;font-size:18px;color:var(--gold-soft);margin-bottom:12px}
+  .ref-card ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .ref-card li{font-size:13px;line-height:1.5;padding-left:18px;position:relative;color:#dde4d4}
+  .ref-card li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:50%;background:var(--gold)}
+  .ref-card li b{color:#fff;font-weight:600}
+
+  /* ---------- Modal ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(28,28,20,.5);backdrop-filter:blur(3px);z-index:80;
+    display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+  .overlay.open{display:flex}
+  .modal{background:var(--cream);border-radius:18px;width:100%;max-width:520px;box-shadow:var(--shadow-lg);
+    animation:pop .2s ease;overflow:hidden}
+  @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+  .modal-head{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;
+    background:var(--white)}
+  .modal-head h3{font-family:var(--disp);font-weight:600;font-size:20px}
+  .modal-body{padding:22px}
+  .field{margin-bottom:16px}
+  .field label{font-family:var(--label);text-transform:uppercase;letter-spacing:.06em;font-size:11px;font-weight:600;
+    color:var(--ink-soft);display:block;margin-bottom:6px}
+  .field input,.field textarea,.field select{width:100%;padding:10px 12px;border:1px solid var(--line-strong);
+    border-radius:10px;background:var(--white)}
+  .field textarea{min-height:78px;resize:vertical}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .modal-foot{padding:16px 22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;
+    gap:10px;background:var(--white)}
+  .pill-toggle{display:flex;gap:6px}
+  .pill-toggle button{padding:8px 13px;border-radius:9px;border:1px solid var(--line-strong);background:var(--white);
+    font-family:var(--label);text-transform:uppercase;font-size:11.5px;font-weight:600;color:var(--ink-soft)}
+  .pill-toggle button.on{border-color:transparent}
+  .pill-toggle button.on[data-v=marketing]{background:var(--gold);color:#3a2c08}
+  .pill-toggle button.on[data-v=catering]{background:var(--coffee);color:#fff}
+
+  .empty{text-align:center;padding:40px 20px;color:var(--ink-faint)}
+  .empty svg{width:34px;height:34px;opacity:.4;margin-bottom:10px}
+  .empty p{font-size:13.5px}
+
+  .footnote{text-align:center;color:var(--ink-faint);font-size:11.5px;margin-top:40px;font-family:var(--label);
+    text-transform:uppercase;letter-spacing:.1em}
+
+  @media print{
+    header,nav,.head-tools,.btn,.add-inline,.t-actions,.icon-btn,.footnote{display:none!important}
+    body::before{display:none}
+    .view{display:none!important}
+    #print-target{display:block!important}
+    body{background:#fff}
+    .card{box-shadow:none;border-color:#ccc}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <div class="brand">
+      <div class="mark" title="Lake Roots">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#2A4A1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M12 8c0-3 2-5 5-5M12 11c0-2.5 2-4 4-4M12 8c0-3-2-5-5-5M12 13c0-2.5-2-4-4-4M7 22h10"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Lake Roots Command Center</h1>
+        <div class="sub">Marketing &amp; Catering · July 2026</div>
+      </div>
+    </div>
+    <div class="head-tools">
+      <span class="save-pill saved" id="savePill"><span class="save-dot"></span><span id="saveText">Saved</span></span>
+      <button class="ghost" onclick="window.print()">Print</button>
+      <button class="ghost" onclick="exportData()">Export</button>
+      <button class="ghost" onclick="document.getElementById('importFile').click()">Import</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(event)">
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner" id="tabs">
+    <button class="tab active" data-view="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+      Dashboard</button>
+    <button class="tab" data-view="tasks">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Tasks</button>
+    <button class="tab" data-view="calendar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Calendar</button>
+    <button class="tab" data-view="social">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg>
+      Social Planner</button>
+    <button class="tab" data-view="notes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg>
+      Notes</button>
+  </div>
+</nav>
+
+<main>
+  <!-- ===================== DASHBOARD ===================== -->
+  <section class="view active" id="view-dashboard">
+    <div class="view-head">
+      <div>
+        <div class="eyebrow">Condensed view · everything at a glance</div>
+        <h2>July at Lake Roots</h2>
+        <p class="lede">Your whole month in one screen — how the work is split between marketing and catering, what's done, and what's next.</p>
+      </div>
+      <button class="btn btn-gold" onclick="openTask('marketing')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Quick add task</button>
+    </div>
+
+    <div class="grid dash-top" style="margin-bottom:18px">
+      <div class="card panel-pad">
+        <div class="panel-title"><span class="pt-dot"></span>July progress</div>
+        <div class="progress-wrap">
+          <div class="ring">
+            <svg width="128" height="128" viewBox="0 0 128 128">
+              <circle cx="64" cy="64" r="54" fill="none" stroke="#eadfc4" stroke-width="13"/>
+              <circle id="ringFill" cx="64" cy="64" r="54" fill="none" stroke="#2A4A1E" stroke-width="13"
+                stroke-linecap="round" stroke-dasharray="339.3" stroke-dashoffset="339.3"/>
+            </svg>
+            <div class="ring-center"><span class="ring-num" id="ringPct">0%</span><span class="ring-lab">complete</span></div>
+          </div>
+          <div class="prog-stats">
+            <div class="prog-row"><span>Tasks completed</span><b id="dDone">0</b></div>
+            <div class="prog-row"><span>Still to do</span><b id="dTodo">0</b></div>
+            <div class="prog-row"><span>Total this month</span><b id="dTotal">0</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card panel-pad">
+        <div class="panel-title"><span class="pt-dot" style="background:var(--coffee)"></span>Workload balance</div>
+        <div class="balance">
+          <div class="bal-bar">
+            <div class="bal-seg bal-mkt" id="balMkt">Marketing</div>
+            <div class="bal-seg bal-cat" id="balCat">Catering</div>
+          </div>
+          <div class="bal-legend">
+            <span><i class="swatch" style="background:var(--gold)"></i> Marketing <b id="balMktN" style="margin-left:3px">0</b></span>
+            <span><i class="swatch" style="background:var(--coffee)"></i> Catering <b id="balCatN" style="margin-left:3px">0</b></span>
+          </div>
+          <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px;line-height:1.5" id="balNote"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid stat-grid" style="margin-bottom:18px">
+      <div class="stat"><div class="s-num" id="stPosts">0</div><div class="s-lab">Posts planned</div></div>
+      <div class="stat"><div class="s-num" id="stReady">0</div><div class="s-lab">Posts ready to go</div></div>
+      <div class="stat cat"><div class="s-num" id="stCater">0</div><div class="s-lab">Catering jobs</div></div>
+      <div class="stat cat"><div class="s-num" id="stShoots">0</div><div class="s-lab">Shoots scheduled</div></div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:18px" id="dashBottom">
+      <div class="card panel-pad">
+        <div class="panel-title"><span class="pt-dot"></span>Coming up next</div>
+        <div class="focus-list" id="focusList"></div>
+      </div>
+      <div class="card panel-pad">
+        <div class="panel-title"><span class="pt-dot"></span>Open catering &amp; events</div>
+        <div class="upcoming-list" id="caterList"></div>
+      </div>
+    </div>
+
+    <div class="card panel-pad" style="margin-top:18px">
+      <div class="panel-title"><span class="pt-dot"></span>Weekly rhythm — how to split the week <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-faint);font-family:var(--body);font-size:11.5px;margin-left:6px">click any day to edit</span></div>
+      <div class="rhythm-grid" id="rhythmGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===================== TASKS ===================== -->
+  <section class="view" id="view-tasks">
+    <div class="view-head">
+      <div>
+        <div class="eyebrow">Two jobs, one list</div>
+        <h2>Task list</h2>
+        <p class="lede">Everything marketing and catering, side by side. Check things off and the July progress updates automatically.</p>
+      </div>
+    </div>
+    <div class="filters">
+      <div class="seg" id="domainFilter">
+        <button class="on" data-d="all">All</button>
+        <button data-d="marketing">Marketing</button>
+        <button data-d="catering">Catering</button>
+      </div>
+      <div class="seg" id="statusFilter">
+        <button class="on" data-s="all">All</button>
+        <button data-s="open">Open</button>
+        <button data-s="done">Done</button>
+      </div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input type="text" id="taskSearch" placeholder="Search tasks…" oninput="renderTasks()">
+      </div>
+    </div>
+    <div class="tasks-cols">
+      <div>
+        <div class="task-col-head">
+          <div class="tch-title"><span class="domain-dot dd-mkt"></span>Marketing</div>
+          <div class="count" id="mktCount"></div>
+        </div>
+        <div id="mktTasks"></div>
+        <button class="add-inline" onclick="openTask('marketing')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Add marketing task</button>
+      </div>
+      <div>
+        <div class="task-col-head">
+          <div class="tch-title"><span class="domain-dot dd-cat"></span>Catering</div>
+          <div class="count" id="catCount"></div>
+        </div>
+        <div id="catTasks"></div>
+        <button class="add-inline" onclick="openTask('catering')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Add catering task</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CALENDAR ===================== -->
+  <section class="view" id="view-calendar">
+    <div class="view-head">
+      <div>
+        <div class="eyebrow">July 2026</div>
+        <h2>The month</h2>
+        <p class="lede">Tasks, posts, shoots and catering jobs all on one grid. Click any day to see what's on or add something.</p>
+      </div>
+      <button class="btn btn-line" onclick="openEvent()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Add to a day</button>
+    </div>
+    <div class="card panel-pad">
+      <div class="cal-wrap">
+        <table class="cal">
+          <thead><tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr></thead>
+          <tbody id="calBody"></tbody>
+        </table>
+      </div>
+      <div class="cal-legend">
+        <span><i class="swatch" style="background:var(--gold)"></i>Marketing task</span>
+        <span><i class="swatch" style="background:var(--coffee)"></i>Catering task</span>
+        <span><i class="swatch" style="background:#2d6072"></i>Social post</span>
+        <span><i class="swatch" style="background:#5a4178"></i>Shoot</span>
+        <span><i class="swatch" style="background:var(--forest)"></i>Event</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SOCIAL ===================== -->
+  <section class="view" id="view-social">
+    <div class="view-head">
+      <div>
+        <div class="eyebrow">Showcase the café, market &amp; bar</div>
+        <h2>Social planner</h2>
+        <p class="lede">Plan posts around the pillars that grow the page. Edit the date, the idea, where it's going, and how far along the content is.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openPost()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Add post</button>
+    </div>
+    <div class="pillars" id="pillars"></div>
+    <div class="card" style="overflow:hidden">
+      <table class="social-table">
+        <thead><tr><th>Date</th><th>Where</th><th>Series / pillar</th><th>The idea</th><th>Content status</th><th></th></tr></thead>
+        <tbody id="socialBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== NOTES ===================== -->
+  <section class="view" id="view-notes">
+    <div class="view-head">
+      <div>
+        <div class="eyebrow">Scratchpad &amp; playbook</div>
+        <h2>Notes</h2>
+        <p class="lede">Anything that doesn't fit a task — ideas, reminders, promo concepts, vendor notes. Saves as you type.</p>
+      </div>
+    </div>
+    <div class="grid notes-grid">
+      <div>
+        <textarea class="notepad" id="notepad" placeholder="Start typing… promo ideas, vendor follow-ups, caption drafts, things to remember." oninput="onNotesInput()"></textarea>
+      </div>
+      <div>
+        <div class="ref-card">
+          <h3>Catering blueprint</h3>
+          <ul>
+            <li><b>Boxes (Portillo's-style):</b> per-person bundles people just pick and order — no math.</li>
+            <li><b>Joe to Go:</b> 96-oz boxes that serve ~10–12 cups, with cups, lids, creamer &amp; sugar packed in.</li>
+            <li><b>5-gal Cambros:</b> for big events; flag deposit + return on the order.</li>
+            <li><b>Packaging:</b> branded sleeves, labels &amp; box stickers tie it back to Lake Roots.</li>
+            <li><b>Coffee service add-on:</b> let event orders bolt coffee onto any catering box.</li>
+          </ul>
+        </div>
+        <div class="ref-card" style="background:var(--coffee)">
+          <h3 style="color:#f0d9b8">Caption voice</h3>
+          <ul>
+            <li>Warm, personal, short — never salesy.</li>
+            <li>Sensory over functional: <b>brewing, not "now open."</b></li>
+            <li>Put faces in it — baristas, owners, regulars.</li>
+            <li>Vendor arc: <b>source → process → arrival.</b></li>
+            <li>Sell the experience, not just the drink.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footnote">Lake Roots Café · Market &amp; Bar — 475 W. Virginia St., Crystal Lake, IL</div>
+</main>
+
+<!-- print target (dashboard snapshot) -->
+<div id="print-target" style="display:none"></div>
+
+<!-- ===================== MODALS ===================== -->
+<div class="overlay" id="overlay">
+  <!-- Task modal -->
+  <div class="modal" id="taskModal" style="display:none">
+    <div class="modal-head"><h3 id="taskModalTitle">New task</h3>
+      <button class="icon-btn" onclick="closeModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div class="modal-body">
+      <input type="hidden" id="taskId">
+      <div class="field"><label>Domain</label>
+        <div class="pill-toggle" id="taskDomain">
+          <button data-v="marketing" onclick="setDomain('marketing')">Marketing</button>
+          <button data-v="catering" onclick="setDomain('catering')">Catering</button>
+        </div>
+      </div>
+      <div class="field"><label>Task</label><input type="text" id="taskTitle" placeholder="e.g. Shoot Tribe County Farms — source step"></div>
+      <div class="field-row">
+        <div class="field"><label>Category</label>
+          <select id="taskCat"></select></div>
+        <div class="field"><label>Date</label><input type="date" id="taskDate" min="2026-07-01" max="2026-07-31" value="2026-07-01"></div>
+      </div>
+      <div class="field"><label>Priority</label>
+        <select id="taskPrio"><option value="low">Low</option><option value="med" selected>Medium</option><option value="high">High</option></select></div>
+      <div class="field"><label>Notes</label><textarea id="taskNotes" placeholder="Details, links, who's involved…"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-line" id="taskDelete" onclick="deleteTask()" style="visibility:hidden">Delete</button>
+      <button class="btn btn-primary" onclick="saveTask()">Save task</button>
+    </div>
+  </div>
+
+  <!-- Post modal -->
+  <div class="modal" id="postModal" style="display:none">
+    <div class="modal-head"><h3 id="postModalTitle">New post</h3>
+      <button class="icon-btn" onclick="closeModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div class="modal-body">
+      <input type="hidden" id="postId">
+      <div class="field-row">
+        <div class="field"><label>Date</label><input type="date" id="postDate" min="2026-07-01" max="2026-07-31" value="2026-07-01"></div>
+        <div class="field"><label>Where</label>
+          <select id="postPlatform"><option>Instagram</option><option>Instagram Story</option><option>Reel</option><option>Facebook</option><option>Both IG + FB</option></select></div>
+      </div>
+      <div class="field"><label>Series / pillar</label>
+        <select id="postPillar">
+          <option>Drink of the Week</option><option>Barista Picks</option><option>Customer Favorites</option>
+          <option>Vendor story</option><option>Show the vibe</option><option>Event</option>
+          <option>Catering / Joe to Go</option><option>Promo</option><option>Other</option></select></div>
+      <div class="field"><label>The idea</label><textarea id="postIdea" placeholder="What the post is — caption angle, what to capture…"></textarea></div>
+      <div class="field"><label>Content status</label>
+        <select id="postStatus">
+          <option value="planned">Planned</option><option value="shoot">Needs shoot</option>
+          <option value="editing">Editing</option><option value="ready">Ready</option><option value="posted">Posted</option></select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-line" id="postDelete" onclick="deletePost()" style="visibility:hidden">Delete</button>
+      <button class="btn btn-primary" onclick="savePost()">Save post</button>
+    </div>
+  </div>
+
+  <!-- Event modal -->
+  <div class="modal" id="eventModal" style="display:none">
+    <div class="modal-head"><h3 id="eventModalTitle">Add to a day</h3>
+      <button class="icon-btn" onclick="closeModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div class="modal-body">
+      <input type="hidden" id="eventId">
+      <div class="field"><label>What is it</label><input type="text" id="eventTitle" placeholder="e.g. Monday Coffee Club"></div>
+      <div class="field-row">
+        <div class="field"><label>Type</label>
+          <select id="eventType"><option value="event">Event</option><option value="shoot">Shoot</option><option value="catering">Catering job</option></select></div>
+        <div class="field"><label>Date</label><input type="date" id="eventDate" min="2026-07-01" max="2026-07-31" value="2026-07-06"></div>
+      </div>
+      <div class="field"><label>Notes</label><textarea id="eventNotes" placeholder="Time, location, details…"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-line" id="eventDelete" onclick="deleteEvent()" style="visibility:hidden">Delete</button>
+      <button class="btn btn-primary" onclick="saveEvent()">Save</button>
+    </div>
+  </div>
+
+  <!-- Day modal -->
+  <div class="modal" id="dayModal" style="display:none;max-width:560px">
+    <div class="modal-head"><h3 id="dayModalTitle">July</h3>
+      <button class="icon-btn" onclick="closeModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div class="modal-body" id="dayBody"></div>
+    <div class="modal-foot" style="justify-content:flex-end">
+      <button class="btn btn-line" id="dayAddPost">+ Post</button>
+      <button class="btn btn-line" id="dayAddEvent">+ Event</button>
+      <button class="btn btn-gold" id="dayAddTask">+ Task</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   Lake Roots — July 2026 Command Center
+   ============================================================ */
+const STORAGE_KEY = 'lakeroots_july2026_v1';
+const CATS = {
+  marketing: ['Social','Content/Shoots','Promos','Print & Branding','Community'],
+  catering:  ['Boxes & Menu','Coffee Service','Packaging','Order Fulfillment','Setup/SOP']
+};
+const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+/* ---------- seed data ---------- */
+function seed(){
+  return {
+    tasks:[
+      // marketing
+      {id:id(),domain:'marketing',cat:'Social',title:'Plan & schedule the full July post calendar',date:'2026-07-01',prio:'high',done:true,notes:'Map every pillar across the month before the 4th.'},
+      {id:id(),domain:'marketing',cat:'Content/Shoots',title:'Shoot July 4th content',date:'2026-07-02',prio:'high',done:true,notes:'Patriotic drink + market spread. Capture the vibe, not just the cup.'},
+      {id:id(),domain:'marketing',cat:'Social',title:'Post July 4th content',date:'2026-07-04',prio:'med',done:false,notes:'Warm, community caption — open hours in a comment, not the caption.'},
+      {id:id(),domain:'marketing',cat:'Promos',title:'Build "Coffee, catered" summer promo (Joe to Go)',date:'2026-07-08',prio:'med',done:false,notes:'Tie marketing to the new catering coffee service. Limited-time intro offer.'},
+      {id:id(),domain:'marketing',cat:'Content/Shoots',title:'Vendor shoot — Tribe County Farms',date:'2026-07-07',prio:'med',done:false,notes:'Source step of the arc — at the farm, shared values not promo.'},
+      {id:id(),domain:'marketing',cat:'Content/Shoots',title:'Vendor shoot — Nona\u2019s Honey',date:'2026-07-13',prio:'med',done:false,notes:'Source → process → arrival. Get the hands-on detail shots.'},
+      {id:id(),domain:'marketing',cat:'Content/Shoots',title:'Vendor shoot — Pasta Bar',date:'2026-07-16',prio:'med',done:false,notes:''},
+      {id:id(),domain:'marketing',cat:'Content/Shoots',title:'Vendor shoot — Julie Anne\u2019s',date:'2026-07-21',prio:'med',done:false,notes:''},
+      {id:id(),domain:'marketing',cat:'Content/Shoots',title:'Vendor shoot — Wanda Farms',date:'2026-07-23',prio:'med',done:false,notes:''},
+      {id:id(),domain:'marketing',cat:'Social',title:'Monday Coffee Club promo — July 6',date:'2026-07-03',prio:'high',done:false,notes:'Story + feed. Guest roaster + exclusive pour-over. 7–9am, free to attend.'},
+      {id:id(),domain:'marketing',cat:'Social',title:'Monday Coffee Club promo — July 20',date:'2026-07-17',prio:'med',done:false,notes:''},
+      {id:id(),domain:'marketing',cat:'Print & Branding',title:'Design catering one-pager + table cards',date:'2026-07-10',prio:'med',done:false,notes:'Boxes + coffee service on one printed sheet for the counter.'},
+      {id:id(),domain:'marketing',cat:'Print & Branding',title:'Lake Roots Athletic Co. merch concept',date:'2026-07-24',prio:'low',done:false,notes:'"Run local. Live rooted." — sketch first drop.'},
+      {id:id(),domain:'marketing',cat:'Content/Shoots',title:'Reel — morning rush energy',date:'2026-07-22',prio:'low',done:false,notes:'Show the vibe: steam, hands, regulars, the line.'},
+      {id:id(),domain:'marketing',cat:'Community',title:'Confirm Concert in the Park presence',date:'2026-07-14',prio:'low',done:false,notes:'Tuesday series — table/Joe to Go opportunity?'},
+      // catering
+      {id:id(),domain:'catering',cat:'Boxes & Menu',title:'Finalize Portillo\u2019s-style catering box tiers',date:'2026-07-09',prio:'high',done:false,notes:'Per-person bundles people just pick — Snack & Sip / Gather / Celebration.'},
+      {id:id(),domain:'catering',cat:'Coffee Service',title:'Stand up Joe to Go box program',date:'2026-07-09',prio:'high',done:false,notes:'96oz box ≈ 10–12 cups. Pack cups, lids, creamer, sugar. Set price.'},
+      {id:id(),domain:'catering',cat:'Coffee Service',title:'Confirm 5-gallon Cambro inventory',date:'2026-07-11',prio:'med',done:false,notes:'Count units, set deposit + return policy for large events.'},
+      {id:id(),domain:'catering',cat:'Setup/SOP',title:'Write coffee service SOP (Joe to Go + Cambros)',date:'2026-07-15',prio:'med',done:false,notes:'Brew amounts, transport, setup, breakdown, return.'},
+      {id:id(),domain:'catering',cat:'Packaging',title:'Source & brand catering box packaging',date:'2026-07-10',prio:'high',done:false,notes:'Boxes, sleeves, labels, stickers — forest/gold/wheat.'},
+      {id:id(),domain:'catering',cat:'Packaging',title:'Design cup sleeves + box labels',date:'2026-07-15',prio:'med',done:false,notes:''},
+      {id:id(),domain:'catering',cat:'Order Fulfillment',title:'Nina & Peter wedding — confirm final order',date:'2026-07-20',prio:'high',done:false,notes:'Catered by Lake Roots, July 26. Lock counts, menu, coffee service.'},
+      {id:id(),domain:'catering',cat:'Order Fulfillment',title:'Nina & Peter wedding — prep & packaging list',date:'2026-07-23',prio:'high',done:false,notes:'Pull list, staffing, transport, Cambros, packaging.'},
+      {id:id(),domain:'catering',cat:'Order Fulfillment',title:'Nina & Peter wedding — final prep day',date:'2026-07-25',prio:'high',done:false,notes:'Everything packed and staged the day before.'},
+      {id:id(),domain:'catering',cat:'Setup/SOP',title:'Build catering order intake form/process',date:'2026-07-12',prio:'med',done:false,notes:'How orders come in → quote → deposit → confirm.'}
+    ],
+    posts:[
+      {id:id(),date:'2026-07-01',platform:'Instagram',pillar:'Drink of the Week',idea:'Kick off July with the summer Drink of the Week — sensory caption, no announcement energy.',status:'ready'},
+      {id:id(),date:'2026-07-03',platform:'Instagram Story',pillar:'Event',idea:'Tease Monday Coffee Club (7/6): guest roaster + exclusive pour-over.',status:'planned'},
+      {id:id(),date:'2026-07-04',platform:'Both IG + FB',pillar:'Show the vibe',idea:'July 4th — market spread + cold drink, the neighborhood feel.',status:'planned'},
+      {id:id(),date:'2026-07-06',platform:'Instagram Story',pillar:'Event',idea:'Live from Monday Coffee Club — faces, steam, the pour.',status:'planned'},
+      {id:id(),date:'2026-07-08',platform:'Instagram',pillar:'Vendor story',idea:'Tribe County Farms — the "source" post. Shared values, not promo.',status:'shoot'},
+      {id:id(),date:'2026-07-10',platform:'Instagram',pillar:'Customer Favorites',idea:'Friday customer favorite — quote a regular.',status:'planned'},
+      {id:id(),date:'2026-07-13',platform:'Reel',pillar:'Barista Picks',idea:'Barista pick of the week — quick, personal, their words.',status:'planned'},
+      {id:id(),date:'2026-07-15',platform:'Instagram',pillar:'Vendor story',idea:'Nona\u2019s Honey — process step of the arc.',status:'shoot'},
+      {id:id(),date:'2026-07-17',platform:'Both IG + FB',pillar:'Catering / Joe to Go',idea:'Introduce Joe to Go boxes — "coffee, catered." Soft promo.',status:'planned'},
+      {id:id(),date:'2026-07-20',platform:'Instagram Story',pillar:'Event',idea:'Monday Coffee Club round two — recap + next roaster.',status:'planned'},
+      {id:id(),date:'2026-07-22',platform:'Reel',pillar:'Show the vibe',idea:'Morning rush reel — sell the experience.',status:'shoot'},
+      {id:id(),date:'2026-07-24',platform:'Instagram',pillar:'Customer Favorites',idea:'Customer favorite + cozy corner shot.',status:'planned'},
+      {id:id(),date:'2026-07-28',platform:'Both IG + FB',pillar:'Vendor story',idea:'Wedding catering BTS (with the couple\u2019s OK) — Lake Roots beyond the counter.',status:'planned'},
+      {id:id(),date:'2026-07-29',platform:'Instagram',pillar:'Drink of the Week',idea:'End-of-month Drink of the Week.',status:'planned'},
+      {id:id(),date:'2026-07-31',platform:'Both IG + FB',pillar:'Promo',idea:'August preview + a reason to come back. Warm sign-off to the month.',status:'planned'}
+    ],
+    events:[
+      {id:id(),date:'2026-07-04',title:'Independence Day',type:'event',notes:'Holiday hours — confirm and post.'},
+      {id:id(),date:'2026-07-06',title:'Monday Coffee Club',type:'event',notes:'7–9am · free to attend · guest roaster · exclusive pour-over.'},
+      {id:id(),date:'2026-07-20',title:'Monday Coffee Club',type:'event',notes:'7–9am · biweekly.'},
+      {id:id(),date:'2026-07-26',title:'Nina & Peter Wedding — catering',type:'catering',notes:'Catered by Lake Roots. Coffee service + boxes. Big day.'},
+      {id:id(),date:'2026-07-07',title:'Shoot: Tribe County Farms',type:'shoot',notes:'On-location source shots.'},
+      {id:id(),date:'2026-07-13',title:'Shoot: Nona\u2019s Honey',type:'shoot',notes:''},
+      {id:id(),date:'2026-07-16',title:'Shoot: Pasta Bar',type:'shoot',notes:''},
+      {id:id(),date:'2026-07-21',title:'Shoot: Julie Anne\u2019s',type:'shoot',notes:''},
+      {id:id(),date:'2026-07-23',title:'Shoot: Wanda Farms',type:'shoot',notes:''}
+    ],
+    rhythm:[
+      {day:'Monday',text:'Coffee Club mornings (when on) + plan & schedule the week\u2019s posts.'},
+      {day:'Tuesday',text:'Content & vendor shoot day — source → process → arrival.'},
+      {day:'Wednesday',text:'Edit photos, write captions, schedule the week\u2019s posts.'},
+      {day:'Thursday',text:'Catering — box menus, coffee service prep, packaging.'},
+      {day:'Friday',text:'Promos, print & branding, community outreach.'},
+      {day:'Saturday',text:'Events & catering execution + live stories.'},
+      {day:'Sunday',text:'Light posting + reset and look at the week ahead.'}
+    ],
+    notes:'July goals\n• Lock the catering box + coffee-service offer so it\u2019s sellable.\n• Keep the feed on the pillars — faces, vibe, vendor stories.\n• Nail the Nina & Peter wedding (7/26) — it\u2019s the proof-of-concept event.\n\nIdeas parking lot\n• ',
+    meta:{created:Date.now()}
+  };
+}
+
+/* ---------- state + persistence ---------- */
+let state = null;
+let saveTimer = null, notesTimer = null;
+
+function id(){return 'x'+Math.random().toString(36).slice(2,9)}
+
+async function loadState(){
+  try{
+    if(window.storage && window.storage.get){
+      const r = await window.storage.get(STORAGE_KEY,false);
+      if(r && r.value) return JSON.parse(r.value);
+    }
+  }catch(e){/* no saved state yet */}
+  return null;
+}
+async function persist(){
+  setSave('saving');
+  try{
+    if(window.storage && window.storage.set){
+      await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+      setSave('saved');
+    } else { setSave('local'); }
+  }catch(e){ setSave('local'); }
+}
+function save(){ clearTimeout(saveTimer); saveTimer = setTimeout(persist, 350); }
+function setSave(s){
+  const pill=document.getElementById('savePill'), txt=document.getElementById('saveText');
+  pill.classList.toggle('saved', s==='saved');
+  txt.textContent = s==='saving'?'Saving…' : s==='saved'?'Saved' : 'Export to keep';
+}
+
+/* ---------- helpers ---------- */
+function fmtDate(d){ const dt=new Date(d+'T00:00'); return DOW[dt.getDay()]+' '+(dt.getMonth()+1)+'/'+dt.getDate(); }
+function dayNum(d){ return new Date(d+'T00:00').getDate(); }
+function dowOf(d){ return DOW[new Date(d+'T00:00').getDay()]; }
+function esc(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function todayJulyStr(){ const t=new Date(); return (t.getFullYear()===2026 && t.getMonth()===6) ? t.toISOString().slice(0,10) : null; }
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function renderAll(){ renderDashboard(); renderTasks(); renderCalendar(); renderSocial(); renderRhythm(); }
+
+/* ----- Dashboard ----- */
+function renderDashboard(){
+  const total = state.tasks.length;
+  const done = state.tasks.filter(t=>t.done).length;
+  const pct = total? Math.round(done/total*100):0;
+  document.getElementById('dDone').textContent=done;
+  document.getElementById('dTodo').textContent=total-done;
+  document.getElementById('dTotal').textContent=total;
+  document.getElementById('ringPct').textContent=pct+'%';
+  const C=2*Math.PI*54;
+  document.getElementById('ringFill').setAttribute('stroke-dasharray',C);
+  document.getElementById('ringFill').setAttribute('stroke-dashoffset', C*(1-pct/100));
+
+  const mkt=state.tasks.filter(t=>t.domain==='marketing').length;
+  const cat=state.tasks.filter(t=>t.domain==='catering').length;
+  const tot=mkt+cat||1;
+  const mPct=Math.round(mkt/tot*100), cPct=100-mPct;
+  document.getElementById('balMkt').style.flexBasis=mPct+'%';
+  document.getElementById('balCat').style.flexBasis=cPct+'%';
+  document.getElementById('balMkt').textContent = mPct>=14? mPct+'%':'';
+  document.getElementById('balCat').textContent = cPct>=14? cPct+'%':'';
+  document.getElementById('balMktN').textContent=mkt+' tasks';
+  document.getElementById('balCatN').textContent=cat+' tasks';
+  const mktOpen=state.tasks.filter(t=>t.domain==='marketing'&&!t.done).length;
+  const catOpen=state.tasks.filter(t=>t.domain==='catering'&&!t.done).length;
+  document.getElementById('balNote').textContent =
+    'Open right now: '+mktOpen+' marketing, '+catOpen+' catering. '+
+    (catOpen>mktOpen? 'Catering is the heavier lift this week — protect Thursday for it.' :
+     mktOpen>catOpen? 'Marketing has more open — batch your shoots and schedule posts ahead.' :
+     'Evenly split — keep to the weekly rhythm below.');
+
+  document.getElementById('stPosts').textContent=state.posts.length;
+  document.getElementById('stReady').textContent=state.posts.filter(p=>p.status==='ready'||p.status==='posted').length;
+  document.getElementById('stCater').textContent=state.events.filter(e=>e.type==='catering').length
+    + state.tasks.filter(t=>t.domain==='catering'&&t.cat==='Order Fulfillment').length;
+  document.getElementById('stShoots').textContent=state.events.filter(e=>e.type==='shoot').length;
+
+  // coming up — merge tasks(open)+events+posts, sorted by date, next 7 items
+  const items=[];
+  state.tasks.filter(t=>!t.done).forEach(t=>items.push({date:t.date,title:t.title,kind:t.domain==='marketing'?'mkt':'cat',meta:t.cat}));
+  state.events.forEach(e=>items.push({date:e.date,title:e.title,kind:e.type==='catering'?'event':e.type,meta:e.type==='shoot'?'Shoot':e.type==='catering'?'Catering':'Event'}));
+  state.posts.filter(p=>p.status!=='posted').forEach(p=>items.push({date:p.date,title:p.idea.split('—')[0].slice(0,46),kind:'social',meta:p.pillar}));
+  const today=todayJulyStr();
+  const upcoming=items.filter(i=> !today || i.date>=today).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,7);
+  const fl=document.getElementById('focusList');
+  fl.innerHTML = upcoming.length? upcoming.map(i=>{
+    const dt=new Date(i.date+'T00:00');
+    return `<div class="focus-item">
+      <div class="fi-date">${DOW[dt.getDay()]}<span class="d">${dt.getDate()}</span></div>
+      <div class="fi-body"><div class="fi-title">${esc(i.title)}</div>
+        <div class="fi-meta"><span class="tag tag-${i.kind}">${i.meta}</span></div></div></div>`;
+  }).join('') : emptyMini('All caught up.');
+
+  // catering & events open
+  const cl=document.getElementById('caterList');
+  const cater=[
+    ...state.events.filter(e=>e.type==='catering'||e.type==='event').map(e=>({date:e.date,title:e.title,meta:e.type==='catering'?'Catering':'Event',notes:e.notes})),
+    ...state.tasks.filter(t=>t.domain==='catering'&&!t.done).map(t=>({date:t.date,title:t.title,meta:t.cat,notes:t.notes}))
+  ].sort((a,b)=>a.date.localeCompare(b.date)).slice(0,7);
+  cl.innerHTML = cater.length? cater.map(c=>{
+    const dt=new Date(c.date+'T00:00');
+    return `<div class="focus-item">
+      <div class="fi-date" style="color:var(--coffee)">${DOW[dt.getDay()]}<span class="d">${dt.getDate()}</span></div>
+      <div class="fi-body"><div class="fi-title">${esc(c.title)}</div>
+        <div class="fi-meta"><span class="tag tag-cat">${esc(c.meta)}</span></div></div></div>`;
+  }).join('') : emptyMini('Nothing on the catering board.');
+}
+function emptyMini(msg){ return `<div class="empty" style="padding:24px 10px"><p>${msg}</p></div>`; }
+
+/* ----- Rhythm ----- */
+function renderRhythm(){
+  const g=document.getElementById('rhythmGrid');
+  g.innerHTML = state.rhythm.map((r,i)=>`
+    <div class="rhythm-day"><h4>${r.day}</h4>
+      <textarea class="rh-text" data-i="${i}" rows="3">${esc(r.text)}</textarea></div>`).join('');
+  g.querySelectorAll('.rh-text').forEach(t=>{
+    t.addEventListener('input',e=>{ state.rhythm[+e.target.dataset.i].text=e.target.value; save(); });
+  });
+}
+
+/* ----- Tasks ----- */
+let fDomain='all', fStatus='all';
+function renderTasks(){
+  const q=(document.getElementById('taskSearch').value||'').toLowerCase();
+  ['marketing','catering'].forEach(dom=>{
+    const wrap=document.getElementById(dom==='marketing'?'mktTasks':'catTasks');
+    let list=state.tasks.filter(t=>t.domain===dom);
+    if(fStatus==='open') list=list.filter(t=>!t.done);
+    if(fStatus==='done') list=list.filter(t=>t.done);
+    if(q) list=list.filter(t=>(t.title+' '+t.notes+' '+t.cat).toLowerCase().includes(q));
+    if(fDomain!=='all' && fDomain!==dom){ wrap.innerHTML=''; }
+    else {
+      list.sort((a,b)=> (a.done-b.done) || a.date.localeCompare(b.date));
+      wrap.innerHTML = list.length? list.map(t=>taskRow(t)).join('') :
+        `<div class="empty"><p>No tasks here yet.</p></div>`;
+    }
+    const all=state.tasks.filter(t=>t.domain===dom);
+    document.getElementById(dom==='marketing'?'mktCount':'catCount').textContent =
+      all.filter(t=>t.done).length+' / '+all.length+' done';
+  });
+  // hide opposite column when filtered
+  const cols=document.querySelector('.tasks-cols').children;
+  cols[0].style.display = (fDomain==='catering')?'none':'';
+  cols[1].style.display = (fDomain==='marketing')?'none':'';
+}
+function taskRow(t){
+  return `<div class="task ${t.done?'done':''}">
+    <button class="check" onclick="toggleTask('${t.id}')" aria-label="Toggle done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></button>
+    <div class="t-main" onclick="openTask(null,'${t.id}')" style="cursor:pointer">
+      <div class="t-title">${esc(t.title)}</div>
+      <div class="t-meta">
+        <span class="prio prio-${t.prio}"></span>
+        <span class="t-cat">${esc(t.cat)}</span>
+        <span class="t-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>${fmtDate(t.date)}</span>
+      </div>
+      ${t.notes?`<div class="t-notes">${esc(t.notes)}</div>`:''}
+    </div>
+    <div class="t-actions">
+      <button class="icon-btn" onclick="openTask(null,'${t.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4v16h16v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4z"/></svg></button>
+    </div>
+  </div>`;
+}
+function toggleTask(tid){ const t=state.tasks.find(x=>x.id===tid); if(t){ t.done=!t.done; save(); renderTasks(); renderDashboard(); } }
+
+/* ----- Calendar ----- */
+function renderCalendar(){
+  const first=new Date(2026,6,1); const startDow=first.getDay(); const days=31;
+  const today=todayJulyStr();
+  let cells=[]; for(let i=0;i<startDow;i++) cells.push(null);
+  for(let d=1;d<=days;d++) cells.push(d);
+  while(cells.length%7) cells.push(null);
+  let html='';
+  for(let w=0;w<cells.length/7;w++){
+    html+='<tr>';
+    for(let i=0;i<7;i++){
+      const d=cells[w*7+i];
+      if(d===null){ html+='<td class="empty"></td>'; continue; }
+      const ds='2026-07-'+String(d).padStart(2,'0');
+      const isWeekend=(i===0||i===6);
+      const items=dayItems(ds);
+      const shown=items.slice(0,3);
+      const extra=items.length-shown.length;
+      html+=`<td class="${isWeekend?'weekend':''}"><div class="cell ${ds===today?'has-today':''}" onclick="openDay('${ds}')">
+        <div class="daynum">${d}${ds===today?'<span class="today-pill">Today</span>':''}</div>
+        <div class="chips">
+          ${shown.map(it=>`<span class="chip chip-${it.cls} ${it.done?'done':''}">${esc(it.label)}</span>`).join('')}
+          ${extra>0?`<span class="more">+${extra} more</span>`:''}
+        </div></div></td>`;
+    }
+    html+='</tr>';
+  }
+  document.getElementById('calBody').innerHTML=html;
+}
+function dayItems(ds){
+  const out=[];
+  state.events.filter(e=>e.date===ds).forEach(e=>out.push({cls:e.type==='shoot'?'shoot':e.type==='catering'?'cat':'event',label:e.title,done:false}));
+  state.tasks.filter(t=>t.date===ds).forEach(t=>out.push({cls:t.domain==='marketing'?'mkt':'cat',label:t.title,done:t.done}));
+  state.posts.filter(p=>p.date===ds).forEach(p=>out.push({cls:'social',label:'📷 '+p.pillar,done:p.status==='posted'}));
+  return out;
+}
+
+/* ----- Social ----- */
+const PILLARS=[
+  {n:'Drink of the Week',d:'A recurring hook people look for.'},
+  {n:'Barista Picks',d:'Faces of the brand, in their words.'},
+  {n:'Customer Favorites',d:'Regulars sell it better than you can.'},
+  {n:'Vendor stories',d:'Source → process → arrival. Shared values.'},
+  {n:'Show the vibe',d:'Rush energy, cozy corners, the experience.'}
+];
+const STMAP={planned:['Planned','st-planned'],shoot:['Needs shoot','st-shoot'],editing:['Editing','st-editing'],ready:['Ready','st-ready'],posted:['Posted','st-posted']};
+function renderSocial(){
+  document.getElementById('pillars').innerHTML=PILLARS.map(p=>
+    `<div class="pillar"><div class="p-n">${p.n}</div><div class="p-d">${p.d}</div></div>`).join('');
+  const body=document.getElementById('socialBody');
+  const posts=[...state.posts].sort((a,b)=>a.date.localeCompare(b.date));
+  body.innerHTML = posts.length? posts.map(p=>{
+    const dt=new Date(p.date+'T00:00');
+    return `<tr>
+      <td data-l="Date" class="s-date-cell">${(dt.getMonth()+1)}/${dt.getDate()}<span class="dow">${DOW[dt.getDay()]}</span></td>
+      <td data-l="Where">${esc(p.platform)}</td>
+      <td data-l="Series">${esc(p.pillar)}</td>
+      <td data-l="Idea" style="color:var(--ink-soft);max-width:340px">${esc(p.idea)}</td>
+      <td data-l="Status">
+        <select class="status-sel" onchange="setPostStatus('${p.id}',this.value)">
+          ${Object.keys(STMAP).map(k=>`<option value="${k}" ${p.status===k?'selected':''}>${STMAP[k][0]}</option>`).join('')}
+        </select></td>
+      <td data-l=""><button class="icon-btn" onclick="openPost('${p.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4v16h16v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4z"/></svg></button></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="6"><div class="empty"><p>No posts planned yet. Add your first one.</p></div></td></tr>`;
+}
+function setPostStatus(pid,v){ const p=state.posts.find(x=>x.id===pid); if(p){p.status=v; save(); renderDashboard();} }
+
+/* ----- Notes ----- */
+function onNotesInput(){ state.notes=document.getElementById('notepad').value; clearTimeout(notesTimer); notesTimer=setTimeout(save,500); }
+
+/* ============================================================
+   MODALS
+   ============================================================ */
+function openOverlay(which){
+  document.getElementById('overlay').classList.add('open');
+  ['taskModal','postModal','eventModal','dayModal'].forEach(m=>document.getElementById(m).style.display = m===which?'block':'none');
+}
+function closeModal(){ document.getElementById('overlay').classList.remove('open'); }
+document.getElementById('overlay').addEventListener('click',e=>{ if(e.target.id==='overlay') closeModal(); });
+
+/* Task modal */
+let curDomain='marketing';
+function fillCats(dom){ const sel=document.getElementById('taskCat'); sel.innerHTML=CATS[dom].map(c=>`<option>${c}</option>`).join(''); }
+function setDomain(d){ curDomain=d; document.querySelectorAll('#taskDomain button').forEach(b=>b.classList.toggle('on',b.dataset.v===d)); fillCats(d); }
+function openTask(dom,tid){
+  openOverlay('taskModal');
+  if(tid){
+    const t=state.tasks.find(x=>x.id===tid);
+    document.getElementById('taskModalTitle').textContent='Edit task';
+    document.getElementById('taskId').value=t.id;
+    setDomain(t.domain);
+    document.getElementById('taskTitle').value=t.title;
+    document.getElementById('taskCat').value=t.cat;
+    document.getElementById('taskDate').value=t.date;
+    document.getElementById('taskPrio').value=t.prio;
+    document.getElementById('taskNotes').value=t.notes;
+    document.getElementById('taskDelete').style.visibility='visible';
+  } else {
+    document.getElementById('taskModalTitle').textContent='New task';
+    document.getElementById('taskId').value='';
+    setDomain(dom||'marketing');
+    document.getElementById('taskTitle').value='';
+    document.getElementById('taskDate').value='2026-07-01';
+    document.getElementById('taskPrio').value='med';
+    document.getElementById('taskNotes').value='';
+    document.getElementById('taskDelete').style.visibility='hidden';
+  }
+  setTimeout(()=>document.getElementById('taskTitle').focus(),50);
+}
+function saveTask(){
+  const title=document.getElementById('taskTitle').value.trim();
+  if(!title){ document.getElementById('taskTitle').focus(); return; }
+  const tid=document.getElementById('taskId').value;
+  const data={domain:curDomain,title,cat:document.getElementById('taskCat').value,
+    date:document.getElementById('taskDate').value,prio:document.getElementById('taskPrio').value,
+    notes:document.getElementById('taskNotes').value.trim()};
+  if(tid){ Object.assign(state.tasks.find(x=>x.id===tid),data); }
+  else { state.tasks.push({id:id(),done:false,...data}); }
+  save(); closeModal(); renderTasks(); renderDashboard(); renderCalendar();
+}
+function deleteTask(){ const tid=document.getElementById('taskId').value; state.tasks=state.tasks.filter(x=>x.id!==tid); save(); closeModal(); renderTasks(); renderDashboard(); renderCalendar(); }
+
+/* Post modal */
+function openPost(pid,presetDate){
+  openOverlay('postModal');
+  if(pid){
+    const p=state.posts.find(x=>x.id===pid);
+    document.getElementById('postModalTitle').textContent='Edit post';
+    document.getElementById('postId').value=p.id;
+    document.getElementById('postDate').value=p.date;
+    document.getElementById('postPlatform').value=p.platform;
+    document.getElementById('postPillar').value=p.pillar;
+    document.getElementById('postIdea').value=p.idea;
+    document.getElementById('postStatus').value=p.status;
+    document.getElementById('postDelete').style.visibility='visible';
+  } else {
+    document.getElementById('postModalTitle').textContent='New post';
+    document.getElementById('postId').value='';
+    document.getElementById('postDate').value=presetDate||'2026-07-01';
+    document.getElementById('postPlatform').value='Instagram';
+    document.getElementById('postPillar').value='Drink of the Week';
+    document.getElementById('postIdea').value='';
+    document.getElementById('postStatus').value='planned';
+    document.getElementById('postDelete').style.visibility='hidden';
+  }
+  setTimeout(()=>document.getElementById('postIdea').focus(),50);
+}
+function savePost(){
+  const idea=document.getElementById('postIdea').value.trim();
+  if(!idea){ document.getElementById('postIdea').focus(); return; }
+  const pid=document.getElementById('postId').value;
+  const data={date:document.getElementById('postDate').value,platform:document.getElementById('postPlatform').value,
+    pillar:document.getElementById('postPillar').value,idea,status:document.getElementById('postStatus').value};
+  if(pid){ Object.assign(state.posts.find(x=>x.id===pid),data); }
+  else { state.posts.push({id:id(),...data}); }
+  save(); closeModal(); renderSocial(); renderDashboard(); renderCalendar();
+}
+function deletePost(){ const pid=document.getElementById('postId').value; state.posts=state.posts.filter(x=>x.id!==pid); save(); closeModal(); renderSocial(); renderDashboard(); renderCalendar(); }
+
+/* Event modal */
+function openEvent(eid,presetDate){
+  openOverlay('eventModal');
+  if(eid){
+    const e=state.events.find(x=>x.id===eid);
+    document.getElementById('eventModalTitle').textContent='Edit';
+    document.getElementById('eventId').value=e.id;
+    document.getElementById('eventTitle').value=e.title;
+    document.getElementById('eventType').value=e.type;
+    document.getElementById('eventDate').value=e.date;
+    document.getElementById('eventNotes').value=e.notes;
+    document.getElementById('eventDelete').style.visibility='visible';
+  } else {
+    document.getElementById('eventModalTitle').textContent='Add to a day';
+    document.getElementById('eventId').value='';
+    document.getElementById('eventTitle').value='';
+    document.getElementById('eventType').value='event';
+    document.getElementById('eventDate').value=presetDate||'2026-07-06';
+    document.getElementById('eventNotes').value='';
+    document.getElementById('eventDelete').style.visibility='hidden';
+  }
+  setTimeout(()=>document.getElementById('eventTitle').focus(),50);
+}
+function saveEvent(){
+  const title=document.getElementById('eventTitle').value.trim();
+  if(!title){ document.getElementById('eventTitle').focus(); return; }
+  const eid=document.getElementById('eventId').value;
+  const data={title,type:document.getElementById('eventType').value,date:document.getElementById('eventDate').value,notes:document.getElementById('eventNotes').value.trim()};
+  if(eid){ Object.assign(state.events.find(x=>x.id===eid),data); }
+  else { state.events.push({id:id(),...data}); }
+  save(); closeModal(); renderCalendar(); renderDashboard();
+}
+function deleteEvent(){ const eid=document.getElementById('eventId').value; state.events=state.events.filter(x=>x.id!==eid); save(); closeModal(); renderCalendar(); renderDashboard(); }
+
+/* Day modal */
+function openDay(ds){
+  openOverlay('dayModal');
+  const dt=new Date(ds+'T00:00');
+  document.getElementById('dayModalTitle').textContent=DOW[dt.getDay()]+', July '+dt.getDate();
+  const body=document.getElementById('dayBody');
+  const evs=state.events.filter(e=>e.date===ds);
+  const tks=state.tasks.filter(t=>t.date===ds);
+  const pos=state.posts.filter(p=>p.date===ds);
+  let h='';
+  if(!evs.length&&!tks.length&&!pos.length){ h=`<div class="empty"><p>Nothing scheduled. Add something below.</p></div>`; }
+  if(evs.length){ h+=`<div style="margin-bottom:14px"><div class="t-cat" style="color:var(--ink-soft);margin-bottom:8px">Events &amp; shoots</div>`+
+    evs.map(e=>`<div class="task" style="margin-bottom:7px;cursor:pointer" onclick="closeModal();setTimeout(()=>openEvent('${e.id}'),60)">
+      <span class="tag tag-${e.type==='catering'?'event':e.type}">${e.type}</span>
+      <div class="t-main"><div class="t-title" style="font-size:13.5px">${esc(e.title)}</div>${e.notes?`<div class="t-notes">${esc(e.notes)}</div>`:''}</div></div>`).join('')+`</div>`; }
+  if(tks.length){ h+=`<div style="margin-bottom:14px"><div class="t-cat" style="color:var(--ink-soft);margin-bottom:8px">Tasks due</div>`+
+    tks.map(t=>`<div class="task ${t.done?'done':''}" style="margin-bottom:7px">
+      <button class="check" onclick="toggleTask('${t.id}');openDay('${ds}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></button>
+      <div class="t-main" style="cursor:pointer" onclick="closeModal();setTimeout(()=>openTask(null,'${t.id}'),60)"><div class="t-title" style="font-size:13.5px">${esc(t.title)}</div>
+      <div class="t-meta"><span class="tag tag-${t.domain==='marketing'?'mkt':'cat'}">${t.domain}</span> <span class="t-cat">${esc(t.cat)}</span></div></div></div>`).join('')+`</div>`; }
+  if(pos.length){ h+=`<div><div class="t-cat" style="color:var(--ink-soft);margin-bottom:8px">Posts</div>`+
+    pos.map(p=>`<div class="task" style="margin-bottom:7px;cursor:pointer" onclick="closeModal();setTimeout(()=>openPost('${p.id}'),60)">
+      <span class="tag tag-social">${esc(p.platform)}</span>
+      <div class="t-main"><div class="t-title" style="font-size:13.5px">${esc(p.pillar)}</div><div class="t-notes">${esc(p.idea)}</div></div></div>`).join('')+`</div>`; }
+  body.innerHTML=h;
+  document.getElementById('dayAddTask').onclick=()=>{ closeModal(); setTimeout(()=>{ openTask('marketing'); document.getElementById('taskDate').value=ds; },60); };
+  document.getElementById('dayAddEvent').onclick=()=>{ closeModal(); setTimeout(()=>openEvent(null,ds),60); };
+  document.getElementById('dayAddPost').onclick=()=>{ closeModal(); setTimeout(()=>openPost(null,ds),60); };
+}
+
+/* ============================================================
+   IMPORT / EXPORT
+   ============================================================ */
+function exportData(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='lake-roots-july2026-'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+}
+function importData(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const d=JSON.parse(r.result); if(d.tasks&&d.posts){ state=d; save(); renderAll(); loadNotes(); alert('Imported. Your plan is loaded.'); } else alert('That file doesn\u2019t look like a Lake Roots backup.'); }catch(e){ alert('Could not read that file.'); } };
+  r.readAsText(f); ev.target.value='';
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+document.getElementById('tabs').addEventListener('click',e=>{
+  const tab=e.target.closest('.tab'); if(!tab) return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+tab.dataset.view).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('domainFilter').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  fDomain=b.dataset.d;
+  document.querySelectorAll('#domainFilter button').forEach(x=>{x.classList.remove('on','mkt','cat');});
+  b.classList.add('on'); if(fDomain==='marketing')b.classList.add('mkt'); if(fDomain==='catering')b.classList.add('cat');
+  renderTasks();
+});
+document.getElementById('statusFilter').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return; fStatus=b.dataset.s;
+  document.querySelectorAll('#statusFilter button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); renderTasks();
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+function loadNotes(){ document.getElementById('notepad').value=state.notes||''; }
+
+/* ============================================================
+   INIT
+   ============================================================ */
+(async function init(){
+  const saved=await loadState();
+  state = saved || seed();
+  if(!saved) await persist();
+  fillCats('marketing');
+  renderAll();
+  loadNotes();
+})();
+</script>
+</body>
+</html>
